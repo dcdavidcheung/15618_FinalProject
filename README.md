@@ -1,6 +1,7 @@
 # TITLE: Multiple Method Parallel Raytracing
 
 David Cheung (dcheung2)
+
 Shane Li (sihengl)
 
 
@@ -36,7 +37,7 @@ We plan to be able to parallelize the code with OpenMP, MPI, and SIMD instructio
 Our Final demo will essentially be a display of the speedup graphs taken from the benchmarks. This will be augmented with graphs depicting where each programming model’s bottlenecks lie.
 
 
-## PLATFORM CHOICE: Describe why the platform (computer and/or language) you have chosen is a good one for your needs. Why does it make sense to use this parallel system for the workload you have chosen?
+## PLATFORM CHOICE:
 
 We plan on running on multicore CPUs and working with C++. OpenMP, MPI, and SIMD all have support with modern C++ compilers. 
 
@@ -44,21 +45,21 @@ We plan on running on multicore CPUs and working with C++. OpenMP, MPI, and SIMD
 
 ## SCHEDULE: 
 
-11/14-11/18
-	David: Start implementing MPI version
-	Shane: Start implementing OpenMP version
-11/21-11/25
-	David: Finish implementing MPI version
-	Shane: Finish implementing OpenMP version
-    David and Shane: Test for correctness and benchmark MPI and OpenMP versions
-11/28-12/2
-	David and Shane: Write and submit intermediate milestone update
-    David: Start implementing CUDA version
-    Shane: Start implementing SIMD version
-12/5-12/9
-    David: Finish implementing CUDA version
-    Shane: Finish implementing SIMD version
-    David and Shane: Test for correctness and benchmark CUDA and SIMD versions
-12/12-12/16
-    David and Shane: Benchmark with more complex scenes
-	David and Shane: Finalize final writeup and prepare demo
+- 11/14-11/18  
+	- David: Start implementing MPI version  
+	- Shane: Start implementing OpenMP version  
+- 11/21-11/25
+	- David: Finish implementing MPI version  
+	- Shane: Finish implementing OpenMP version  
+    - David and Shane: Test for correctness and benchmark MPI and OpenMP versions  
+- 11/28-12/2  
+	- David and Shane: Write and submit intermediate milestone update  
+    - David: Start implementing CUDA version  
+    - Shane: Start implementing SIMD version  
+- 12/5-12/9  
+    - David: Finish implementing CUDA version  
+    - Shane: Finish implementing SIMD version  
+    - David and Shane: Test for correctness and benchmark CUDA and SIMD versions  
+- 12/12-12/16  
+    - David and Shane: Benchmark with more complex scenes  
+	- David and Shane: Finalize final writeup and prepare demo  

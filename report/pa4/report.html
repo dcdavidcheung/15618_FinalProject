@@ -1,0 +1,143 @@
+**Assignment 4 Report**
+
+Student name: Siheng Li (sihengl)
+
+(##) About this template
+
+* Structure your report using numbers and titles following those of the assignment.
+
+* For every task include all images you generated. dirt will generate both an `.hdr` and an sRGB tonemapped `.png` image of your rendering. Use the `.png` in the comparisons in your report.
+
+* For tasks where we provide a reference image, include a comparison of your output to the reference (see examples of this below)
+
+* Include descriptions of encountered problems, a list of external libraries that you used (if applicable) and the time you spent on each task.
+
+For an overview of Markdeep and its syntax, see the [official demo document](https://casual-effects.com/markdeep/features.md.html) and
+the associated [source code](https://casual-effects.com/markdeep/features.md.html?noformat).
+
+(##) Feedback
+
+Use this section to provide feedback about the assignment.
+
+(##) WARNING! Your images for this assignment are rendered with fewer samples, don't worry if your images have more noise as long as they look similar to the reference images.
+
+(##) Task 1: Russian Roulette
+
+Empty Cornell Box for the Unidirectional Volumetric Path Tracer
+<div class="twentytwenty-container">
+	<img src="images/empty-cornell-box-uni-32-spp.png" alt="Reference">
+    <img src="images/empty-cornell-box-uni-2022-04-01-13-40-22.png" alt="Mine">
+</div>
+
+Empty Cornell Box for the Next Event Volumetric Path Tracer
+<div class="twentytwenty-container">
+	<img src="images/empty-cornell-box-nee-32-spp.png" alt="Reference">
+    <img src="images/empty-cornell-box-nee-2022-04-01-13-40-13.png" alt="Mine">
+</div>
+
+(##) Task 2: Henyey-Greenstein Phase Function
+G = 0, PDF
+<div class="twentytwenty-container">
+	<img src="images/hg0-pdf.png" alt="Reference">
+    <img src="images/hg0-pdf1.png" alt="Mine">
+</div>
+
+G = 0, Sampled
+<div class="twentytwenty-container">
+	<img src="images/hg0-sampled.png" alt="Reference">
+    <img src="images/hg0-sampled1.png" alt="Mine">
+</div>
+
+G = 0.5, PDF
+<div class="twentytwenty-container">
+	<img src="images/hg0p5-pdf.png" alt="Reference">
+    <img src="images/hg0p5-pdf1.png" alt="Mine">
+</div>
+
+G = 0.5, Sampled
+<div class="twentytwenty-container">
+	<img src="images/hg0p5-sampled.png" alt="Reference">
+    <img src="images/hg0p5-sampled1.png" alt="Mine">
+</div>
+
+G = 0.9, PDF
+<div class="twentytwenty-container">
+    <img src="images/hg0p9-pdf.png" alt="Reference">
+    <img src="images/hg0p9-pdf1.png" alt="Mine">
+</div>
+
+G = 0.9, Sampled
+<div class="twentytwenty-container">
+    <img src="images/hg0p9-sampled.png" alt="Reference">
+    <img src="images/hg0p9-sampled1.png" alt="Mine">
+</div>
+
+(Rotated) G = 0.5, PDF
+<div class="twentytwenty-container">
+    <img src="images/rotated-hg0p5-pdf.png" alt="Reference">
+    <img src="images/rotated-hg0p5-pdf1.png" alt="Mine">
+</div>
+
+(Rotated) G = 0.5, Sampled
+<div class="twentytwenty-container">
+    <img src="images/rotated-hg0p5-sampled.png" alt="Reference">
+    <img src="images/rotated-hg0p5-sampled1.png" alt="Mine">
+</div>
+
+(Rotated) G = 0.9, PDF
+<div class="twentytwenty-container">
+    <img src="images/rotated-hg0p9-pdf.png" alt="Reference">
+    <img src="images/rotated-hg0p9-pdf1.png" alt="Mine">
+</div>
+
+(Rotated) G = 0.9, Sampled
+<div class="twentytwenty-container">
+    <img src="images/rotated-hg0p9-sampled.png" alt="Reference">
+    <img src="images/rotated-hg0p9-sampled1.png" alt="Mine">
+</div>
+
+(##) Task 3: Analytic Free-Flight Sampling and Transmittance
+
+Isotropic Cornell Box
+<div class="twentytwenty-container">
+	<img src="images/isotropic-cornell-box-1024-spp.png" alt="Reference">
+    <img src="images/isotropic-cornell-box-2022-04-01-20-13-11.png" alt="Mine">
+</div>
+
+Forward Scattering Cornell Box
+<div class="twentytwenty-container">
+    <img src="images/forward-cornell-box-1024-spp.png" alt="Reference">
+    <img src="images/forward-cornell-box-2022-04-01-20-13-43.png" alt="Mine">
+</div>
+
+(##) Task 3: Delta Tracking
+
+Unidirectional Cornell Box with Heterogeneous Medium
+<div class="twentytwenty-container">
+    <img src="images/cornell-box-uni-1024-spp.png" alt="Reference">
+    <img src="images/cornell-box-uni-2022-04-01-20-14-57.png" alt="Mine">
+</div>
+
+
+
+(##) Task 3: Ratio Tracking
+
+Next Event Estimation for Spot the Heterogeneous Cow Cloud
+<div class="twentytwenty-container">
+    <img src="images/spot-nee-256-spp.png" alt="Reference">
+    <img src="images/spot-nee-2022-04-01-14-06-50.png" alt="Mine">
+</div>
+
+
+
+
+<!--- Markdeep & image comparison library - probably no need to change anything below -->
+<style class="fallback">body{visibility:hidden;white-space:pre;font-family:monospace}</style><script src="../resources/markdeep.min.js"></script><script>window.alreadyProcessedMarkdeep||(document.body.style.visibility="visible")</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="../resources/jquery.event.move.js"></script>
+<script src="../resources/jquery.twentytwenty.js"></script>
+<link href="../resources/offcanvas.css" rel="stylesheet">
+<link href="../resources/twentytwenty.css" rel="stylesheet" type="text/css" />
+<script>
+$(window).load(function(){$(".twentytwenty-container").twentytwenty({default_offset_pct: 0.5});});
+</script>

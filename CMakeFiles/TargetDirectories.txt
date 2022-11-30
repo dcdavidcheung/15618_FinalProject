@@ -1,0 +1,8 @@
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/05_phase_tester.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/03_point_gen.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/dirt_lib.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/03_sample_test.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/dirt.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/04_sample_tester.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/ALL_BUILD.dir
+C:/Users/Shane/Desktop/32 Terabyte HW Folder/graphics 15668/15618/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,58 @@
+{
+	"camera": {
+		"transform": {
+			"from": [-20, 20, -45],
+			"at": [0, 0, 0],
+			"up": [0, 1, 0]
+		},
+		"vfov": 20,
+		"fdist": 400,
+		"resolution": [500, 500]
+	},
+	"image_samples": 1,
+	"integrator":
+	{
+        "type": "volpath_tracer_uni",
+        "max_bounces": 1
+    },
+	"background": [0, 0, 0],
+	"accelerator":
+	{
+		"type": "bbh"
+	},
+	"materials": [{
+    	"type": "diffuse light",
+    	"name": "light",
+    	"emit": 2000
+    }, {
+    	"type": "lambertian",
+    	"albedo": 1.0,
+    	"name": "white"
+    }],
+	"surfaces": [{
+			"type": "mesh",
+			"name": "spot",
+			"filename": "../meshes/stanford-dragon.obj",
+			"medium_interface": {
+				"inside": {
+					"type": "perlin",
+					"sigma_a": [0.001, 0.1, 0.001],
+					"sigma_s": [0.01, 0.01, 0.01],
+					"spatial_scale": [20, 20, 20],
+					"density_scale": 4,
+					"density_offset": -1.25,
+					"phase": {
+						"type": "hg",
+						"g": 0.95
+					}
+				}
+			}
+		},
+		{
+			"type": "sphere",
+			"transform": { "translate": [0, 1.1, -1.1]},
+			"radius": 0.04,
+			"material": "light"
+		}
+	]
+}

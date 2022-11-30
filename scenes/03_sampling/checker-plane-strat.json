@@ -1,0 +1,40 @@
+{
+    "camera":
+    {
+        "transform": { "o": [0,2,4] },
+        "resolution": [ 1024, 1024 ],
+        "vfov": 45
+    },
+    "sampler":
+    {
+        "type": "stratified",
+        "image_samples": 4,
+        "dimension": 4
+    },
+    "materials": [
+        {
+            "type": "lambertian",
+            "name": "checker",
+            "albedo": {
+                "type": "checker",
+                "even": [0.2, 0.3, 0.1],
+                "odd": [0.9, 0.9, 0.9],
+                "scale": 10
+            }
+        }
+    ],
+    "surfaces": [
+        {
+            "type": "quad",
+            "transform": { "o": [0,-1,0], "x": [1,0,0], "y": [0,0,-1], "z": [0,1,0] },
+            "size": 100,
+            "material": "checker"
+        }
+    ],
+    "image_samples": 4,
+    "background": [1, 1, 1],
+	"accelerator":
+	{
+		"type": "bbh"
+	}
+}

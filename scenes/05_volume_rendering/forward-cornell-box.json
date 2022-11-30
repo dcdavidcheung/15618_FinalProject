@@ -1,0 +1,168 @@
+{
+	"camera": {
+		"transform": {
+			"from": [0, 20, 1077.5],
+			"at": [0, -4, 0],
+			"up": [0, 1, 0]
+		},
+		"vfov": 40,
+		"fdist": 800,
+		"medium": {
+			"type": "homogeneous",
+			"sigma_a": 0.0005,
+			"sigma_s": 0.00025,
+			"phase": {
+				"type": "hg",
+				"g": 0.9
+			}
+		}
+	},
+	"image_samples": 1024,
+	"integrator":
+	{
+        "type": "volpath_tracer_nee",
+        "max_bounces": 4
+    },
+	"background": [0,0,0],
+	"accelerator":
+	{
+		"type": "bbh"
+	},
+	"materials": [
+		{
+			"type": "lambertian",
+			"name": "scotty",
+			"albedo": {"type": "image", "filename": "../meshes/scotty.png"}
+		},
+		{
+			"type": "lambertian",
+			"name": "white",
+			"albedo": {"type": "constant", "color": [0.73, 0.73, 0.73]}
+		},
+		{
+			"type": "lambertian",
+			"name": "tartan",
+			"albedo": {"type": "image", "filename": "../meshes/tartan.png"}
+		},
+		{
+			"type": "diffuse light",
+			"name": "light",
+			"emit": 50
+		},
+		{
+			"type": "lambertian",
+			"name": "redsphere",
+			"albedo": {"type": "constant", "color": [0.54, 0.16, 0.17]}
+		},
+		{
+			"type": "lambertian",
+			"name": "greensphere",
+			"albedo": {"type": "constant", "color": [0.25, 0.75, 0.25]}
+		},
+		{
+			"type": "lambertian",
+			"name": "bluesphere",
+			"albedo": {"type": "constant", "color": [0.25,0.25,0.75]}
+		}
+	],
+	"surfaces": [
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"translate": [0, 0, -1110]
+				}
+			],
+			"size": [555,555],
+			"material": "scotty"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [1, 0, 0],
+					"angle": 90
+				},
+				{
+					"translate": [0, 277.5, -550]
+				}
+			],
+			"size": [555,2250],
+			"material": "white"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [1, 0, 0],
+					"angle": -90
+				},
+				{
+					"translate": [0, -277.5, -550]
+				}
+			],
+			"size": [555,2250],
+			"material": "white"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [0, 1, 0],
+					"angle": 90
+				},
+				{
+					"translate": [-277.5, 0, -550]
+				}
+			],
+			"size": [2220,555],
+			"material": "tartan"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [0, 1, 0],
+					"angle": -90
+				},
+				{
+					"translate": [277.5, 0, -550]
+				}
+			],
+			"size": [2220,555],
+			"material": "tartan"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [1, 0, 0],
+					"angle": 90
+				},
+				{
+					"translate": [0, 277, 0]
+				}
+			],
+			"size": [20,800],
+			"material": "light"
+		},
+		{
+			"type": "sphere",
+			"transform": { "translate": [140,-177.5,100] },
+			"radius": 100,
+			"material": "greensphere"
+		},
+		{
+			"type": "sphere",
+			"transform": { "translate": [-140,-177.5,-400] },
+			"radius": 100,
+			"material": "redsphere"
+		},
+		{
+			"type": "sphere",
+			"transform": { "translate": [140,-177.5,-900] },
+			"radius": 100,
+			"material": "bluesphere"
+		}
+	]
+}

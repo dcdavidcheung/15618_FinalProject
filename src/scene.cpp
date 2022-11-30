@@ -20,7 +20,7 @@
 #include <dirt/progress.h>
 #include <dirt/sampler.h>
 #include <fstream>
-#include <omp.h>
+#include "mpi.h"
 
 /// Construct a new scene from a json object
 Scene::Scene(const json & j)
@@ -152,6 +152,15 @@ Color3f Scene::recursiveColor(Sampler &sampler, const Ray3f &ray, int depth) con
 Image3f Scene::raytrace() const
 {
 	std::cout << "RAYTRACE" << std::endl;
+    int pid;
+    int nproc;
+
+    // Initialize MPI
+    MPI_Init(&argc, &argv);
+    // Get process rank
+    MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    // Get total number of processes specificed at start of run
+    MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 
     // allocate an image of the proper size
     auto image = Image3f(m_camera->resolution().x, m_camera->resolution().y);
@@ -176,8 +185,12 @@ Image3f Scene::raytrace() const
 
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
+    // Grid based parallelism
+    // Divide up the space similar to nbody simulation
+    // Need to figure out granularity of communication
+
     // foreach pixel
-	#pragma omp parallel
+	// #pragma omp parallel
     for (auto j : range(m_camera->resolution().y))
     {
         for (auto i : range(m_camera->resolution().x))
@@ -203,6 +216,10 @@ Image3f Scene::raytrace() const
         }
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    MPI_Finalize();
+
 	// return the ray-traced image
     return image;
 }
@@ -216,7 +233,7 @@ Image3f Scene::integrateImage() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp for
+	// #pragma omp for
 	for (auto j : range(m_camera->resolution().y))
     {
         for (auto i : range(m_camera->resolution().x))
@@ -235,17 +252,17 @@ Image3f Scene::integrateImage() const
                 Color3f c = m_integrator->Li(*this, *m_sampler, m_camera->generateRay(i + sample.x, j + sample.y));
                 // if(c.r != c.b)
                 // cout << c << endl;
-				#pragma omp critical
+				// #pragma omp critical
                 image(i, j) += c;
 
-				#pragma omp critical
+				// #pragma omp critical
                 m_sampler->startNextPixelSample();
             }
             // scale by the number of samples
-			#pragma omp critical
+			// #pragma omp critical
             image(i, j) /= m_imageSamples;
 
-			#pragma omp critical
+			// #pragma omp critical
             ++progress;
         }
     }

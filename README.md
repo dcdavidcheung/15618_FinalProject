@@ -49,17 +49,32 @@ We plan on running on multicore CPUs and working with C++. OpenMP, MPI, and SIMD
 	- David: Start implementing MPI version  
 	- Shane: Start implementing OpenMP version  
 - 11/21-11/25
-	- David: Finish implementing MPI version  
-	- Shane: Finish implementing OpenMP version  
-    - David and Shane: Test for correctness and benchmark MPI and OpenMP versions  
-- 11/28-12/2  
-	- David and Shane: Write and submit intermediate milestone update  
-    - David: Start implementing CUDA version  
-    - Shane: Start implementing SIMD version  
-- 12/5-12/9  
-    - David: Finish implementing CUDA version  
+	- David: Continue implementing MPI version  
+	- Shane: Continue implementing OpenMP version  
+- 11/28-11/30  
+    - Shane: Finish implementing OpenMP version  
+	- David and Shane: Write and submit intermediate milestone update
+    - Shane: Test for correctness and benchmark OpenMP version  
+- 11/30-12/2  
+    - David: Finish implementing MPI version  
+    - David: Test for correctness and benchmark MPI version  
+    - Shane: Finalize scenes for benchmarking as well as deciding on the complex scenes 
+- 12/5-12/7  
+    - Shane: Look for avenues to exploit SIMD
+    - David: Look for SIMD instructions and decide on instruction set  
+    - David and Shane: Start implementing SIMD version  
+- 12/7-12/9  
+    - David: Start exploring CUDA version  
+    - David and Shane: Continue implementing SIMD version  
+    - David and Shane: Start benchamrking all versions with more complex scenes  
+- 12/12-12/14  
     - Shane: Finish implementing SIMD version  
-    - David and Shane: Test for correctness and benchmark CUDA and SIMD versions  
-- 12/12-12/16  
-    - David and Shane: Benchmark with more complex scenes  
-	- David and Shane: Finalize final writeup and prepare demo  
+    - David: Continue implementing CUDA version  
+    - David and Shane: Benchmark all versions with more complex scenes  
+    - David and Shane: Test for correctness and benchmark SIMD version  
+- 12/14-12/16  
+    - David and Shane: Perform performance analysis with performance tools to get metrics  
+    - David and Shane: Analyze performance results  
+    - David: Test for correctness and benchmark CUDA version  
+- 12/16-12/17  
+    - David and Shane: Finalize final writeup and prepare for demo  

@@ -177,10 +177,10 @@ Image3f Scene::raytrace() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp parallel
-    for (auto j : range(m_camera->resolution().y))
+	#pragma omp parallel for schedule(dynamic) num_threads(8)
+    for (int j=0; j < m_camera->resolution().y; j++)
     {
-        for (auto i : range(m_camera->resolution().x))
+        for (int i=0; i < m_camera->resolution().x; i++)
         {
             // init accumulated color
             image(i, j) = Color3f(0.f);
@@ -216,10 +216,10 @@ Image3f Scene::integrateImage() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp for
-	for (auto j : range(m_camera->resolution().y))
+	#pragma omp parallel for
+	for (int j=0; j < m_camera->resolution().y; j++)
     {
-        for (auto i : range(m_camera->resolution().x))
+        for (int i=0; i < m_camera->resolution().x; i++)
         {
             // init accumulated color
             image(i, j) = Color3f(0.f);

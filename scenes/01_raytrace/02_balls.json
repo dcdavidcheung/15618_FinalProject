@@ -1,0 +1,60 @@
+{
+    "camera":
+    {
+        "transform": { "from": [0,0.5,4] }
+    },
+    "materials": [
+        {
+            "type": "lambertian",
+            "name": "white",
+            "albedo": [0.6,0.6,0.6]
+        },
+        {
+            "type": "lambertian",
+            "name": "red",
+            "albedo": [0.6,0.4,0.4]
+        },
+        {
+            "type": "lambertian",
+            "name": "green",
+            "albedo": [0.4,0.6,0.4]
+        }
+    ],
+    "surfaces": [
+        {
+            "type": "quad",
+            "transform": [
+                { "axis": [1,0,0], "angle": -90 },
+                { "translate": [0,-1,0] }
+            ],
+            "size": 100,
+            "material": "white"
+        },
+        {
+            "type": "sphere",
+            "transform": { "translate": [0.5,0,0] },
+            "radius": 1.0,
+            "material": "red"
+        },
+        {
+            "type": "sphere",
+            "transform": [
+                { "translate": [-0.5,0,0] },
+                { "scale": 0.75 },
+                { "translate": [-1.0,-0.25,-1] }
+            ],
+            "material": "green"
+        }
+    ],
+    "sampler": {
+        "type": "stratified",
+        "samplesPerPixel": 4,
+        "dimension": 2
+    },
+    "image_samples": 16,
+    "background": [1, 1, 1],
+	"accelerator":
+	{
+		"type": "bbh"
+	}
+}

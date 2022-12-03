@@ -1,0 +1,133 @@
+{
+	"camera": {
+		"transform": {
+			"from": [0, 20, 900],
+			"at": [0, -4, 0],
+			"up": [0, 1, 0]
+		},
+		"vfov": 40,
+		"fdist": 800
+	},
+	"image_samples": 256,
+	"background": [0,0,0],
+	"integrator":
+	{
+        "type": "path_tracer_mis",
+        "power": 1,
+        "max_bounces": 64
+    },
+	"accelerator":
+	{
+		"type": "bbh"
+	},
+	"materials": [
+		{
+			"type": "lambertian",
+			"name": "white",
+			"albedo": [0.73, 0.73, 0.73]
+		},
+		{
+			"type": "lambertian",
+			"name": "red",
+			"albedo": [0.65, 0.05, 0.05]
+		},
+		{
+			"type": "lambertian",
+			"name": "green",
+			"albedo": [0.12, 0.45, 0.15]
+		},
+		{
+			"type": "lambertian",
+			"name": "black",
+			"albedo": [0, 0, 0]
+		},
+		{
+			"type": "lambertian",
+			"name": "tartan",
+			"albedo": {"type": "image", "filename": "../meshes/tartan.png"}
+		},
+		{
+			"type": "diffuse light",
+			"name": "light",
+			"emit": 1
+		}
+	],
+	"surfaces": [
+		{
+			"type": "sphere",
+			"transform": [
+				{
+					"translate": [0, 0, -277.5]
+				}
+			],
+			"radius": 20,
+			"material": "light"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"translate": [0, 0, -200.5]
+				}
+			],
+			"size": [100,100],
+			"material": "tartan"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [1, 0, 0],
+					"angle": 90
+				},
+				{
+					"translate": [0, 277.5, 0]
+				}
+			],
+			"size": [555,555],
+			"material": "white"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [1, 0, 0],
+					"angle": -90
+				},
+				{
+					"translate": [0, -277.5, 0]
+				}
+			],
+			"size": [555,555],
+			"material": "white"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [0, 1, 0],
+					"angle": 90
+				},
+				{
+					"translate": [-277.5, 0, 0]
+				}
+			],
+			"size": [555,555],
+			"material": "tartan"
+		},
+		{
+			"type": "quad",
+			"transform": [
+				{
+					"axis": [0, 1, 0],
+					"angle": -90
+				},
+				{
+					"translate": [277.5, 0, 0]
+				}
+			],
+			"size": [555,555],
+			"material": "tartan"
+		}
+	]
+}

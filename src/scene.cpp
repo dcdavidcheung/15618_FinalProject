@@ -213,7 +213,7 @@ Image3f Scene::integrateImage() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp paralle for
+	#pragma omp parallel for
     for (auto j : range(m_camera->resolution().y))
     {
         for (auto i : range(m_camera->resolution().x))

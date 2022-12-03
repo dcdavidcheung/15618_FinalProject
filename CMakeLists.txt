@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.19)
 project(dirt)
 
 add_subdirectory(ext ext_build)
@@ -102,6 +102,9 @@ find_package(OpenMP REQUIRED)
 if(OpenMP_CXX_FOUND)
     target_link_libraries(dirt_lib PUBLIC OpenMP::OpenMP_CXX)
 endif()
+
+find_package(MPI REQUIRED)
+target_link_libraries(dirt_lib PUBLIC MPI::MPI_CXX)
 
 SOURCE_GROUP("ext\\tinyformat" FILES ${ext_tinyformat_srcs})
 SOURCE_GROUP("ext\\json" FILES ${ext_json_srcs})

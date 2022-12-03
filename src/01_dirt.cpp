@@ -20,12 +20,15 @@
 #include <dirt/argparse.h>
 #include <time.h>  
 #include <filesystem/resolver.h>
+#include "mpi.h"
 
 // runs the raytrace over all tests and saves the corresponding images
 int main(int argc, char** argv)
 {
     // PROGRAMMING ASSIGNMENT, PART 4/5: Ray tracing & Shading
     // =======================================================
+
+    MPI_Init(&argc, &argv);
 
     auto cmd = CommandlineParser({
                                "dirt",
@@ -109,5 +112,8 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    MPI_Finalize();
     exit(EXIT_SUCCESS);
 }

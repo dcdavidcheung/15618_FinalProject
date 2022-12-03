@@ -156,7 +156,6 @@ Image3f Scene::raytrace() const
     int nproc;
 
     // Initialize MPI
-    MPI_Init(&argc, &argv);
     // Get process rank
     MPI_Comm_rank(MPI_COMM_WORLD, &pid);
     // Get total number of processes specificed at start of run
@@ -217,8 +216,6 @@ Image3f Scene::raytrace() const
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-
-    MPI_Finalize();
 
 	// return the ray-traced image
     return image;

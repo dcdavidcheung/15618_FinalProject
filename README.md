@@ -66,7 +66,7 @@ We plan on running on multicore CPUs and working with C++. OpenMP, MPI, and SIMD
 - 12/7-12/9  
     - David: Start exploring CUDA version  
     - David and Shane: Continue implementing SIMD version  
-    - David and Shane: Start benchamrking all versions with more complex scenes  
+    - David and Shane: Start benchmarking all versions with more complex scenes  
 - 12/12-12/14  
     - Shane: Finish implementing SIMD version  
     - David: Continue implementing CUDA version  

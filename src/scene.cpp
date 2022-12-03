@@ -151,6 +151,8 @@ Color3f Scene::recursiveColor(Sampler &sampler, const Ray3f &ray, int depth) con
 // raytrace an image
 Image3f Scene::raytrace() const
 {
+	std::cout << "RAYTRACE" << std::endl;
+
     // allocate an image of the proper size
     auto image = Image3f(m_camera->resolution().x, m_camera->resolution().y);
 
@@ -175,7 +177,7 @@ Image3f Scene::raytrace() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp parallel
+	#pragma omp parallel for
     for (auto j : range(m_camera->resolution().y))
     {
         for (auto i : range(m_camera->resolution().x))
@@ -207,6 +209,7 @@ Image3f Scene::raytrace() const
 
 Image3f Scene::integrateImage() const
 {
+	std::cout << "INTEGRATE" << std::endl;
     // allocate an image of the proper size
     auto image = Image3f(m_camera->resolution().x, m_camera->resolution().y);
 

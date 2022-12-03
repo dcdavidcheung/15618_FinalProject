@@ -2,4 +2,3 @@ build/*
 build2/*
 ../build2
 **/build
-**/scenes

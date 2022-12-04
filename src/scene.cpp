@@ -21,6 +21,7 @@
 #include <dirt/sampler.h>
 #include <fstream>
 #include "mpi.h"
+#include <cmath> // sqrt
 
 /// Construct a new scene from a json object
 Scene::Scene(const json & j)
@@ -161,6 +162,24 @@ Image3f Scene::raytrace() const
     // Get total number of processes specificed at start of run
     MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 
+    // New MPI datatype
+    MPI_Datatype pixelType;
+    int blockLens[1];
+    MPI_Aint offsets[1];
+    MPI_Datatype oldTypes[1];
+
+    blockLens[0] = 3;
+
+    // MPI_Aint extent, lb;
+    // MPI_Type_get_extent(MPI_FLOAT, &lb, &extent);
+    // offsets[0] = 0;
+    offsets[0] = 0;
+    // offsets[1] = extent;
+
+    oldTypes[0] = MPI_FLOAT;
+    MPI_Type_create_struct(1, blockLens, offsets, oldTypes, &pixelType);
+    MPI_Type_commit(&pixelType);
+
     // allocate an image of the proper size
     auto image = Image3f(m_camera->resolution().x, m_camera->resolution().y);
 
@@ -189,10 +208,34 @@ Image3f Scene::raytrace() const
     // Need to figure out granularity of communication
 
     // foreach pixel
+    // Divide up into grid, compute own section, gather back to thread 0
+
+    // Divide up pixels by scattering
+    // Square Grid
+    // int squareSize = static_cast<int>(pow(nproc, 0.5));
+    // int row = pid / squareSize;
+    // int col = pid % squareSize;
+    // int i_len = m_camera->resolution().x / squareSize;
+    // int j_len = m_camera->resolution().y / squareSize;
+    // int ind_i_min = row * i_len;
+    // int ind_i_max = (row+1) * i_len;
+    // int ind_j_min = col * j_len;
+    // int ind_j_max = (col+1) * j_len;
+    
+    // Rows
+    int row_num = m_camera->resolution().y / nproc;
+    int ind_i_min = 0;
+    int ind_i_max = m_camera->resolution().x;
+    int ind_j_min = pid*row_num;
+    int ind_j_max = (pid+1)*row_num;
+    
+    // Need to send data, reconstruct image class
+    // MPI_Scatter(&newParticles[leftOver], chunkSize, particleType, &particles[0], chunkSize, particleType, 0, MPI_COMM_WORLD);
+
 	// #pragma omp parallel
-    for (auto j : range(m_camera->resolution().y))
+    for (int j=ind_j_min; j<ind_j_max; j++)
     {
-        for (auto i : range(m_camera->resolution().x))
+        for (int i=ind_i_min; i<ind_i_max; i++)
         {
             // init accumulated color
             image(i, j) = Color3f(0.f);
@@ -214,10 +257,16 @@ Image3f Scene::raytrace() const
             ++progress;
         }
     }
+    // MPI_Gatherv(&particles[0], sendCount, particleType, &newParticles[0], &counts[0], &displacements[0], particleType, 0, MPI_COMM_WORLD);
+    // MPI_Allgather(&image.m_data[0], i_len * j_len, pixelType, &image.m_data[0], i_len * j_len, pixelType, MPI_COMM_WORLD);
+    MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().x], row_num*m_camera->resolution().x, pixelType, &image.m_data[0], row_num*m_camera->resolution().x, pixelType, MPI_COMM_WORLD);
 
     MPI_Barrier(MPI_COMM_WORLD);
 
 	// return the ray-traced image
+    // return image;
+
+    // Need to figure out how to distinguish who to trust, can avoid with allgather
     return image;
 }
 

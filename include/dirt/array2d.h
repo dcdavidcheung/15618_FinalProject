@@ -42,9 +42,10 @@ public:
     void resize(int sizeX, int sizeY);          ///< Resize to `sizeX` x `sizeY`
     void reset(const T& value = T(0));          ///< Set all elements to `value`
     void operator=(const T&);                   ///< Set all elements to `value`
+    std::vector<T> m_data;                      ///< the data
 
 protected:
-    std::vector<T> m_data;                      ///< the data
+    // std::vector<T> m_data;                      ///< the data
     int m_sizeX;                                ///< size of first dimension
     int m_sizeY;                                ///< size of second dimension
 };

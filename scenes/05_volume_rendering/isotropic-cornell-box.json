@@ -17,7 +17,7 @@
 			}
 		}
 	},
-	"image_samples": 32,
+	"image_samples": 100,
 	"integrator":
 	{
         "type": "volpath_tracer_nee",

@@ -181,6 +181,13 @@ Image3f Scene::raytrace() const
 
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
+	int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
+	float *firstSample = new float[size];
+	float *secondSample = new float[size];
+
+	raytrace_ispc(size, firstSample);
+	raytrace_ispc(size, secondSample);
+
     // foreach pixel
     for (int j=0; j < m_camera->resolution().y; j++)
     {
@@ -196,7 +203,10 @@ Image3f Scene::raytrace() const
             {
                 // set pixel to the color raytraced with the ray
                 INCREMENT_TRACED_RAYS;
-                Vec2f sample = m_sampler->next2D();
+				int index = j * m_camera->resolution().x * m_imageSamples + i * m_imageSamples + s;
+                Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
+                // Vec2f sample = m_sampler->next2D();
+
                 image(i, j) += recursiveColor(*m_sampler, m_camera->generateRay(i + sample.x, j + sample.y), 0);
                 m_sampler->startNextPixelSample();
             }
@@ -219,12 +229,12 @@ Image3f Scene::integrateImage() const
 
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
-	// int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
-	// float *firstSample = new float[size];
-	// float *secondSample = new float[size];
+	int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
+	float *firstSample = new float[size];
+	float *secondSample = new float[size];
 
-	// raytrace_ispc(size, firstSample);
-	// raytrace_ispc(size, secondSample);
+	raytrace_ispc(size, firstSample);
+	raytrace_ispc(size, secondSample);
 
     // foreach pixel
 	for (int j=0; j < m_camera->resolution().y; j++)
@@ -242,8 +252,8 @@ Image3f Scene::integrateImage() const
                 // set pixel to the color raytraced with the ray
                 INCREMENT_TRACED_RAYS;
 				int index = j * m_camera->resolution().x * m_imageSamples + i * m_imageSamples + s;
-                // Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
-                Vec2f sample = m_sampler->next2D();
+                Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
+                // Vec2f sample = m_sampler->next2D();
 				
                 Color3f c = m_integrator->Li(*this, *m_sampler, m_camera->generateRay(i + sample.x, j + sample.y));
                 // if(c.r != c.b)

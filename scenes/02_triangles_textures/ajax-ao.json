@@ -9,7 +9,7 @@
 		"fdist": 800,
         "resolution": [ 768, 768 ]
 	},
-	"image_samples": 10,
+	"image_samples": 100,
 	"background": 5,
 	"accelerator":
 	{

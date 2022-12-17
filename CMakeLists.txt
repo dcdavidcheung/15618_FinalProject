@@ -87,16 +87,16 @@ add_library(dirt_lib STATIC
 
 add_executable(dirt src/01_dirt.cpp)
 
-add_executable(03_sample_test src/03_sample_test.cpp)
-add_executable(03_point_gen src/03_point_gen.cpp)
-add_executable(04_sample_tester src/04_sample_tester.cpp)
-add_executable(05_phase_tester src/05_phase_tester.cpp)
+# add_executable(03_sample_test src/03_sample_test.cpp)
+# add_executable(03_point_gen src/03_point_gen.cpp)
+# add_executable(04_sample_tester src/04_sample_tester.cpp)
+# add_executable(05_phase_tester src/05_phase_tester.cpp)
 
 target_link_libraries(dirt dirt_lib)
-target_link_libraries(03_sample_test dirt_lib)
-target_link_libraries(03_point_gen dirt_lib)
-target_link_libraries(04_sample_tester dirt_lib)
-target_link_libraries(05_phase_tester dirt_lib)
+# target_link_libraries(03_sample_test dirt_lib)
+# target_link_libraries(03_point_gen dirt_lib)
+# target_link_libraries(04_sample_tester dirt_lib)
+# target_link_libraries(05_phase_tester dirt_lib)
 
 find_package(OpenMP REQUIRED)
 if(OpenMP_CXX_FOUND)

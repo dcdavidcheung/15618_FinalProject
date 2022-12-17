@@ -15,12 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
 #include <dirt/scene.h>
 #include <dirt/progress.h>
 #include <dirt/sampler.h>
 #include <fstream>
 #include <omp.h>
+#include <testscenes.cpp>
+#include <dirt/scene_ispc.h>
+
+extern void raytrace_ispc(int32_t size, float* output);
 
 /// Construct a new scene from a json object
 Scene::Scene(const json & j)
@@ -177,7 +180,6 @@ Image3f Scene::raytrace() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp parallel for schedule(dynamic) num_threads(8)
     for (int j=0; j < m_camera->resolution().y; j++)
     {
         for (int i=0; i < m_camera->resolution().x; i++)
@@ -215,8 +217,14 @@ Image3f Scene::integrateImage() const
 
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
+	int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
+	float *firstSample = new float[size];
+	float *secondSample = new float[size];
+
+	ispc::raytrace_ispc(size, firstSample);
+	ispc::raytrace_ispc(size, secondSample);
+
     // foreach pixel
-	#pragma omp parallel for
 	for (int j=0; j < m_camera->resolution().y; j++)
     {
         for (int i=0; i < m_camera->resolution().x; i++)
@@ -231,7 +239,9 @@ Image3f Scene::integrateImage() const
             {
                 // set pixel to the color raytraced with the ray
                 INCREMENT_TRACED_RAYS;
-                Vec2f sample = m_sampler->next2D();
+				int index = j * m_camera->resolution().x * m_imageSamples + i * m_imageSamples + s;
+                Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
+				
                 Color3f c = m_integrator->Li(*this, *m_sampler, m_camera->generateRay(i + sample.x, j + sample.y));
                 // if(c.r != c.b)
                 // cout << c << endl;

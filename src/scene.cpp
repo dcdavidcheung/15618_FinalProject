@@ -152,33 +152,34 @@ Color3f Scene::recursiveColor(Sampler &sampler, const Ray3f &ray, int depth) con
 // raytrace an image
 Image3f Scene::raytrace() const
 {
-	std::cout << "RAYTRACE" << std::endl;
-    // int pid;
-    // int nproc;
+	std::cout << "RAYTRACE" << " " << m_surfaces->localBBox().pMin << std::endl;
+    std::cout << "RAYTRACE" << " " << m_surfaces->localBBox().pMax << std::endl;
+    int pid;
+    int nproc;
 
     // Initialize MPI
     // Get process rank
-    // MPI_Comm_rank(MPI_COMM_WORLD, &pid);
-    // // Get total number of processes specificed at start of run
-    // MPI_Comm_size(MPI_COMM_WORLD, &nproc);
+    MPI_Comm_rank(MPI_COMM_WORLD, &pid);
+    // Get total number of processes specificed at start of run
+    MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 
-    // // New MPI datatype
-    // MPI_Datatype pixelType;
-    // int blockLens[1];
-    // MPI_Aint offsets[1];
-    // MPI_Datatype oldTypes[1];
+    // New MPI datatype
+    MPI_Datatype pixelType;
+    int blockLens[1];
+    MPI_Aint offsets[1];
+    MPI_Datatype oldTypes[1];
 
-    // blockLens[0] = 3;
+    blockLens[0] = 3;
 
-    // // MPI_Aint extent, lb;
-    // // MPI_Type_get_extent(MPI_FLOAT, &lb, &extent);
-    // // offsets[0] = 0;
+    // MPI_Aint extent, lb;
+    // MPI_Type_get_extent(MPI_FLOAT, &lb, &extent);
     // offsets[0] = 0;
-    // // offsets[1] = extent;
+    offsets[0] = 0;
+    // offsets[1] = extent;
 
-    // oldTypes[0] = MPI_FLOAT;
-    // MPI_Type_create_struct(1, blockLens, offsets, oldTypes, &pixelType);
-    // MPI_Type_commit(&pixelType);
+    oldTypes[0] = MPI_FLOAT;
+    MPI_Type_create_struct(1, blockLens, offsets, oldTypes, &pixelType);
+    MPI_Type_commit(&pixelType);
 
     // allocate an image of the proper size
     auto image = Image3f(m_camera->resolution().x, m_camera->resolution().y);
@@ -204,10 +205,10 @@ Image3f Scene::raytrace() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // no MPI
-    int ind_i_min = 0;
-    int ind_i_max = m_camera->resolution().x;
-    int ind_j_min = 0;
-    int ind_j_max = m_camera->resolution().y;
+    // int ind_i_min = 0;
+    // int ind_i_max = m_camera->resolution().x;
+    // int ind_j_min = 0;
+    // int ind_j_max = m_camera->resolution().y;
 
     // Grid based parallelism
     // Divide up the space similar to nbody simulation
@@ -242,9 +243,30 @@ Image3f Scene::raytrace() const
     // int ind_i_max = (pid+1)*col_num;
     // int ind_j_min = 0;
     // int ind_j_max = m_camera->resolution().y;
+
+    // Load balance rows
+    int concentration = ceil(m_surfaces->localBBox().pMax[1] - m_surfaces->localBBox().pMin[1]);
+    int offset, row_num, ind_i_min, ind_i_max, ind_j_min, ind_j_max;
+    if (concentration >= m_camera->resolution().y-1) {
+        row_num = m_camera->resolution().y / nproc;
+        ind_i_min = 0;
+        ind_i_max = m_camera->resolution().x;
+        ind_j_min = pid*row_num;
+        ind_j_max = (pid+1)*row_num;
+    } else {
+        if (concentration % 2 == 1) concentration++;
+        offset = (m_camera->resolution().y - concentration) / 2;
+        row_num = concentration / nproc;
+        ind_i_min = 0;
+        ind_i_max = m_camera->resolution().x;
+        ind_j_min = pid*row_num+offset;
+        ind_j_max = (pid+1)*row_num+offset;
+    }
     
     // Need to send data, reconstruct image class
     // MPI_Scatter(&newParticles[leftOver], chunkSize, particleType, &particles[0], chunkSize, particleType, 0, MPI_COMM_WORLD);
+    std::cout << "<<< " << pid << " " << ind_i_min << " " << ind_i_max << " " << ind_j_min << " " << ind_j_max << "\n";
+
 
 	// #pragma omp parallel
     for (int j=ind_j_min; j<ind_j_max; j++)
@@ -273,11 +295,14 @@ Image3f Scene::raytrace() const
     }
     // MPI_Gatherv(&particles[0], sendCount, particleType, &newParticles[0], &counts[0], &displacements[0], particleType, 0, MPI_COMM_WORLD);
     // MPI_Allgather(&image.m_data[0], i_len * j_len, pixelType, &image.m_data[0], i_len * j_len, pixelType, MPI_COMM_WORLD);
+    
     // rows
     // MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().x], row_num*m_camera->resolution().x, pixelType, &image.m_data[0], row_num*m_camera->resolution().x, pixelType, MPI_COMM_WORLD);
+    
     // cols
     // MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().y], col_num*m_camera->resolution().y, pixelType, &image.m_data[0], col_num*m_camera->resolution().y, pixelType, MPI_COMM_WORLD);
-    // grid
+    
+    // grid (reordering after gathering)
     // auto buffer = Image3f(m_camera->resolution().x, m_camera->resolution().y);
     // for (int i=0; i<squareSize; i++) {
     //     MPI_Allgather(&image.m_data[ind_i_min + i * m_camera->resolution().x], squareSize, pixelType, &image.m_data[nproc * squareSize * i], squareSize, pixelType, MPI_COMM_WORLD);
@@ -301,6 +326,59 @@ Image3f Scene::raytrace() const
     //         image.m_data[i*squareSize + j] = buffer.m_data[i*squareSize*squareSize*squareSize+j];
     //     }
     // }
+    
+    // load balance rows
+    MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().x], row_num*m_camera->resolution().x, pixelType, &image.m_data[0], row_num*m_camera->resolution().x, pixelType, MPI_COMM_WORLD);
+    std::vector<int> counts, displacements;
+    for (int j=0; j<offset; j++)
+    {
+        for (int i=ind_i_min; i<ind_i_max; i++)
+        {
+            // init accumulated color
+            image(i, j) = Color3f(0.f);
+
+            m_sampler->startPixel();
+
+            // foreach sample
+            for (int s = 0; s < m_imageSamples; ++s)
+            {
+                // set pixel to the color raytraced with the ray
+                INCREMENT_TRACED_RAYS;
+                Vec2f sample = m_sampler->next2D();
+                image(i, j) += recursiveColor(*m_sampler, m_camera->generateRay(i + sample.x, j + sample.y), 0);
+                m_sampler->startNextPixelSample();
+            }
+            // scale by the number of samples
+            image(i, j) /= float(m_imageSamples);
+
+            ++progress;
+        }
+    }
+    for (int j=m_camera->resolution().y-offset; j<m_camera->resolution().y;j++)
+    {
+        for (int i=ind_i_min; i<ind_i_max; i++)
+        {
+            // init accumulated color
+            image(i, j) = Color3f(0.f);
+
+            m_sampler->startPixel();
+
+            // foreach sample
+            for (int s = 0; s < m_imageSamples; ++s)
+            {
+                // set pixel to the color raytraced with the ray
+                INCREMENT_TRACED_RAYS;
+                Vec2f sample = m_sampler->next2D();
+                image(i, j) += recursiveColor(*m_sampler, m_camera->generateRay(i + sample.x, j + sample.y), 0);
+                m_sampler->startNextPixelSample();
+            }
+            // scale by the number of samples
+            image(i, j) /= float(m_imageSamples);
+
+            ++progress;
+        }
+    }
+
 
     MPI_Barrier(MPI_COMM_WORLD);
 
@@ -354,11 +432,11 @@ Image3f Scene::integrateImage() const
     // int ind_j_max = (col_num+1) * j_len;
 
     // Rows
-    int row_num = m_camera->resolution().y / nproc;
-    int ind_i_min = 0;
-    int ind_i_max = m_camera->resolution().x;
-    int ind_j_min = pid*row_num;
-    int ind_j_max = (pid+1)*row_num;
+    // int row_num = m_camera->resolution().y / nproc;
+    // int ind_i_min = 0;
+    // int ind_i_max = m_camera->resolution().x;
+    // int ind_j_min = pid*row_num;
+    // int ind_j_max = (pid+1)*row_num;
 
     // Columns
     // int col_num = m_camera->resolution().x / nproc;
@@ -366,6 +444,25 @@ Image3f Scene::integrateImage() const
     // int ind_i_max = (pid+1)*col_num;
     // int ind_j_min = 0;
     // int ind_j_max = m_camera->resolution().y;
+
+    // Load balance rows
+    int concentration = ceil(m_surfaces->localBBox().pMax[1] - m_surfaces->localBBox().pMin[1]);
+    int offset, row_num, ind_i_min, ind_i_max, ind_j_min, ind_j_max;
+    if (concentration >= m_camera->resolution().y-1) {
+        row_num = m_camera->resolution().y / nproc;
+        ind_i_min = 0;
+        ind_i_max = m_camera->resolution().x;
+        ind_j_min = pid*row_num;
+        ind_j_max = (pid+1)*row_num;
+    } else {
+        if (concentration % 2 == 1) concentration++;
+        offset = (m_camera->resolution().y - concentration) / 2;
+        row_num = concentration / nproc;
+        ind_i_min = 0;
+        ind_i_max = m_camera->resolution().x;
+        ind_j_min = pid*row_num+offset;
+        ind_j_max = (pid+1)*row_num+offset;
+    }
 
     std::cout << "<<< " << pid << " " << ind_i_min << " " << ind_i_max << " " << ind_j_min << " " << ind_j_max << "\n";
 
@@ -407,6 +504,58 @@ Image3f Scene::integrateImage() const
     MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().x], row_num*m_camera->resolution().x, pixelType, &image.m_data[0], row_num*m_camera->resolution().x, pixelType, MPI_COMM_WORLD);
     // cols
     // MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().y], col_num*m_camera->resolution().y, pixelType, &image.m_data[0], col_num*m_camera->resolution().y, pixelType, MPI_COMM_WORLD);
+
+    // load balance rows
+    MPI_Allgather(&image.m_data[ind_j_min*m_camera->resolution().x], row_num*m_camera->resolution().x, pixelType, &image.m_data[0], row_num*m_camera->resolution().x, pixelType, MPI_COMM_WORLD);
+    std::vector<int> counts, displacements;
+    for (int j=0; j<offset; j++)
+    {
+        for (int i=ind_i_min; i<ind_i_max; i++)
+        {
+            // init accumulated color
+            image(i, j) = Color3f(0.f);
+
+            m_sampler->startPixel();
+
+            // foreach sample
+            for (int s = 0; s < m_imageSamples; ++s)
+            {
+                // set pixel to the color raytraced with the ray
+                INCREMENT_TRACED_RAYS;
+                Vec2f sample = m_sampler->next2D();
+                image(i, j) += recursiveColor(*m_sampler, m_camera->generateRay(i + sample.x, j + sample.y), 0);
+                m_sampler->startNextPixelSample();
+            }
+            // scale by the number of samples
+            image(i, j) /= float(m_imageSamples);
+
+            ++progress;
+        }
+    }
+    for (int j=m_camera->resolution().y-offset; j<m_camera->resolution().y;j++)
+    {
+        for (int i=ind_i_min; i<ind_i_max; i++)
+        {
+            // init accumulated color
+            image(i, j) = Color3f(0.f);
+
+            m_sampler->startPixel();
+
+            // foreach sample
+            for (int s = 0; s < m_imageSamples; ++s)
+            {
+                // set pixel to the color raytraced with the ray
+                INCREMENT_TRACED_RAYS;
+                Vec2f sample = m_sampler->next2D();
+                image(i, j) += recursiveColor(*m_sampler, m_camera->generateRay(i + sample.x, j + sample.y), 0);
+                m_sampler->startNextPixelSample();
+            }
+            // scale by the number of samples
+            image(i, j) /= float(m_imageSamples);
+
+            ++progress;
+        }
+    }
 
 
 	// return the ray-traced image

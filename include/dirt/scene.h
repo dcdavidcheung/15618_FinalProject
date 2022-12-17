@@ -27,6 +27,7 @@
 #include <dirt/texture.h>
 #include <dirt/integrator.h>
 #include <dirt/medium.h>
+#include <math.h>
 
 /**
     Main scene data structure.

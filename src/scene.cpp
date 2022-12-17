@@ -23,7 +23,9 @@
 #include <testscenes.cpp>
 #include <dirt/scene_ispc.h>
 
-extern void raytrace_ispc(int32_t size, float* output);
+// extern void raytrace_ispc(int32_t size, float* output);
+
+using namespace ispc;
 
 /// Construct a new scene from a json object
 Scene::Scene(const json & j)
@@ -217,12 +219,12 @@ Image3f Scene::integrateImage() const
 
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
-	int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
-	float *firstSample = new float[size];
-	float *secondSample = new float[size];
+	// int size = m_camera->resolution().x * m_camera->resolution().y * m_imageSamples;
+	// float *firstSample = new float[size];
+	// float *secondSample = new float[size];
 
-	ispc::raytrace_ispc(size, firstSample);
-	ispc::raytrace_ispc(size, secondSample);
+	// raytrace_ispc(size, firstSample);
+	// raytrace_ispc(size, secondSample);
 
     // foreach pixel
 	for (int j=0; j < m_camera->resolution().y; j++)
@@ -240,7 +242,8 @@ Image3f Scene::integrateImage() const
                 // set pixel to the color raytraced with the ray
                 INCREMENT_TRACED_RAYS;
 				int index = j * m_camera->resolution().x * m_imageSamples + i * m_imageSamples + s;
-                Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
+                // Vec2f sample = Vec2f(firstSample[index], secondSample[index]);
+                Vec2f sample = m_sampler->next2D();
 				
                 Color3f c = m_integrator->Li(*this, *m_sampler, m_camera->generateRay(i + sample.x, j + sample.y));
                 // if(c.r != c.b)

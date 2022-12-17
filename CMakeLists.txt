@@ -94,6 +94,10 @@ add_executable(dirt src/01_dirt.cpp)
 # add_executable(05_phase_tester src/05_phase_tester.cpp)
 
 target_link_libraries(dirt dirt_lib)
+target_link_libraries(
+	dirt
+	${CMAKE_CURRENT_SOURCE_DIR}/src/scene_ispc.o
+)
 # target_link_libraries(03_sample_test dirt_lib)
 # target_link_libraries(03_point_gen dirt_lib)
 # target_link_libraries(04_sample_tester dirt_lib)

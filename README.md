@@ -54,12 +54,14 @@ We plan on running on multicore CPUs and working with C++. OpenMP, MPI, and SIMD
     - David and Shane: Test for correctness and benchmark MPI and OpenMP versions  
 - 11/28-12/2  
 	- David and Shane: Write and submit intermediate milestone update  
-    - David: Start implementing CUDA version  
+    - David: Start load balancing MPI version  
     - Shane: Start implementing SIMD version  
 - 12/5-12/9  
-    - David: Finish implementing CUDA version  
+    - David: Finish load balancing MPI version  
     - Shane: Finish implementing SIMD version  
-    - David and Shane: Test for correctness and benchmark CUDA and SIMD versions  
+    - David and Shane: Test for correctness and benchmark and SIMD versions  
 - 12/12-12/16  
     - David and Shane: Benchmark with more complex scenes  
 	- David and Shane: Finalize final writeup and prepare demo  
+  
+Final report found in `final_report.pdf`

@@ -46,12 +46,7 @@
             "material": "green"
         }
     ],
-    "sampler": {
-        "type": "stratified",
-        "samplesPerPixel": 4,
-        "dimension": 2
-    },
-    "image_samples": 16,
+    "image_samples": 100,
     "background": [1, 1, 1],
 	"accelerator":
 	{

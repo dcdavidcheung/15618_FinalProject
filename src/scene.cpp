@@ -177,7 +177,7 @@ Image3f Scene::raytrace() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp parallel for schedule(dynamic) num_threads(8)
+	#pragma omp parallel for schedule(guided, 64)
     for (int j=0; j < m_camera->resolution().y; j++)
     {
         for (int i=0; i < m_camera->resolution().x; i++)
@@ -216,7 +216,7 @@ Image3f Scene::integrateImage() const
     Progress progress("Rendering", m_camera->resolution().x*m_camera->resolution().y);
 
     // foreach pixel
-	#pragma omp parallel for
+	#pragma omp parallel for schedule(guided, 64)
 	for (int j=0; j < m_camera->resolution().y; j++)
     {
         for (int i=0; i < m_camera->resolution().x; i++)
